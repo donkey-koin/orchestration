@@ -1,0 +1,27 @@
+{
+  "name": "orchestration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ejs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donkey-koin/orchestration.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/donkey-koin/orchestration/issues"
+  },
+  "homepage": "https://github.com/donkey-koin/orchestration#readme",
+
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0"
+  }
+}
