@@ -5,7 +5,7 @@
   "main": "index.ejs",
   "scripts": {
     "mocha": "mocha --compilers js:babel-register",
-    "test": "mocha --compilers js:babel-register --recursive ./test/", 
+    "test": "mocha --compilers js:babel-register --recursive ./test/",
     "babel-node": "babel-node --presets=latest",
     "start": "nodemon --exec npm run babel-node -- ./server.js",
     "build": "babel ./server.js --out-file ./dist/server-compiled.js"
@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/donkey-koin/orchestration#readme",
   "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
     "express": "^4.16.2"
   },
   "devDependencies": {

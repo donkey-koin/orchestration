@@ -6,6 +6,12 @@ const port = process.env.PORT || 5000;
 const url =
   "http://localhost:8080/values";
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+var routes = require('./api/routes/routes'); //importing route
+routes(app);
 
 app.get('/api', (req, res) => {
   axios
@@ -19,4 +25,6 @@ app.get('/api', (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port);
+
+console.log('Orchestration server started on: ' + port);
