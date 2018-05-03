@@ -21,12 +21,12 @@ exports.login = function (request, response) {
 export function register(req, res) {
     console.log(req.body);
 
-    // axios.defaults.withCredentials = true;
-    // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-    //console.log("request" + request.body.username);
     axios.post('http://localhost:8080/users', req.body)
     .then((response) => {
-        res.send(response.data);
+        console.log(response.data);
+        res.status(response.status).send(response.data);
     })
-    .catch((error) => res.send(error.response.data));
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);   
+    });
 }
