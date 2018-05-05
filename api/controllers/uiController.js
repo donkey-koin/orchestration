@@ -2,28 +2,24 @@
 import axios from "axios";
 
 
-exports.login = function (request, response) {
-    // axios.post('http://localhost:8080/login', {
-    //     username: request.username,
-    //     password: request.password
-    // }).then((response) => {
-
-    // })
-    console.log(request.body)
-    if (request.body.username === 'xd' && request.body.password === 'gmd') {
-        response.json({ username: request.body.username, token: 'token jwt xd' })
-    } else {
-        response.json({ error: "INVALID CREDENTIALS" })
-    }
-
+export function login(request, response) {
+    console.log("Login request body: " + JSON.stringify(request.body))
+    axios.post('http://localhost:8080/login', request.body)
+    .then((exchangeResponse) => {
+        console.log("Login exchange response: " + JSON.stringify(exchangeResponse.data))
+        response.json({ username: exchangeResponse.data.username, token: exchangeResponse.data.token})
+    }).catch((error) => {
+        if (error.response.status === 403) response.json({error: "Unable to login with provided credentials"})
+        else response.json({error: "Server error"})
+    })
 };
 
 export function register(req, res) {
-    console.log(req.body);
+    console.log("Registration request body: " + JSON.stringify(req.body));
 
     axios.post('http://localhost:8080/users', req.body)
     .then((response) => {
-        console.log(response.data);
+        console.log("Registration exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(response.data);
     })
     .catch((error) => {
