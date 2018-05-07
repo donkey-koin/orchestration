@@ -69,6 +69,44 @@ export function purchase(req, res) {
     });
 }
 
+export function sell(req, res) {
+    let moneyAmount = req.body.moneyAmount;
+    let username = req.body.username;
+    let transactionTime = req.body.date;
+    console.log("Purchase request body: " + JSON.stringify(req.body));
+
+    axios.get('http://localhost:8090/values/newestValue', {
+        params:{
+            date: req.body.date
+        }
+    })
+        .then((response) => {
+            console.log("Purchase transaction response: " + JSON.stringify(response.data));
+            let newestVal = JSON.parse(JSON.stringify(response.data));
+            console.log("siemano" + newestVal.cents);
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+            axios
+                .post('http://localhost:8080/transaction/sell',
+                    {
+                        "username": username,
+                        "moneyAmount": moneyAmount,
+                        "lastKoinValue": newestVal.cents,
+                        "transactionTime": transactionTime
+                    }, headers)
+                .then((response) => {
+                    res.status(response.status).send(response.data);
+                })
+                .catch((error) => {
+                    res.status(error.response.status).send(error.response.data);
+                });
+        })
+        .catch((error) => {
+            res.status(error.response.status).send(error.response.data);
+        });
+}
+
 export function walletContent(req, res) {
     console.log("Get wallet request body: " + JSON.stringify(req.body));
 
