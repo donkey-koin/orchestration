@@ -15,14 +15,17 @@ export function login(request, response) {
 };
 
 export function register(req, res) {
-    console.log("Registration request body: " + JSON.stringify(req.body));
+    console.log("Registration request body: " + req);
 
     axios.post('http://localhost:8080/users', req.body)
     .then((response) => {
-        console.log("Registration exchange response: " + JSON.stringify(response.data));
-        res.status(response.status).send(response.data);
+            // console.log(response);
+            console.log(response.status);
+            console.log("Registration exchange response: ");
+            if (response.status == 201) res.json({ data: "Success" });
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);   
+            if (error.response.status === 409) res.status(409).send({ error: error.response.data })
+            else res.json({ error: "Server error" });
     });
 }
