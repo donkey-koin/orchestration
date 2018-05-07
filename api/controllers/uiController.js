@@ -35,14 +35,9 @@ export function register(req, res) {
 export function purchase(req, res) {
     let moneyAmount = req.body.moneyAmount;
     let username = req.body.username;
-    let transactionTime = req.body.date;
     console.log("Purchase request body: " + JSON.stringify(req.body));
 
-    axios.get('http://localhost:8090/values/newestValue', {
-        params:{
-            date: req.body.date
-        }
-    })
+    axios.get('http://localhost:8090/values/newestValue')
     .then((response) => {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
@@ -55,7 +50,7 @@ export function purchase(req, res) {
                     "username": username,
                     "moneyAmount": moneyAmount,
                     "lastKoinValue": newestVal.cents,
-                    "transactionTime": transactionTime
+                    "transactionTime": newestVal.date
                 }, headers)
             .then((response) => {
                 res.status(response.status).send(response.data);
@@ -72,14 +67,9 @@ export function purchase(req, res) {
 export function sell(req, res) {
     let moneyAmount = req.body.moneyAmount;
     let username = req.body.username;
-    let transactionTime = req.body.date;
     console.log("Sale request body: " + JSON.stringify(req.body));
 
-    axios.get('http://localhost:8090/values/newestValue', {
-        params:{
-            date: req.body.date
-        }
-    })
+    axios.get('http://localhost:8090/values/newestValue')
         .then((response) => {
             console.log("Sale transaction response: " + JSON.stringify(response.data));
             let newestVal = JSON.parse(JSON.stringify(response.data));
@@ -92,7 +82,7 @@ export function sell(req, res) {
                         "username": username,
                         "moneyAmount": moneyAmount,
                         "lastKoinValue": newestVal.cents,
-                        "transactionTime": transactionTime
+                        "transactionTime": newestVal.date
                     }, headers)
                 .then((response) => {
                     res.status(response.status).send(response.data);
