@@ -4,6 +4,10 @@ module.exports = function(app) {
 
   app.route('/login').post(uiController.login);
   app.route('/register').post(uiController.register);
+<<<<<<< Updated upstream
   app.route('/purchase').post(uiController.purchase);
+=======
+  app.route('/walletContent').post(uiController.walletContent);
+>>>>>>> Stashed changes
 
 };

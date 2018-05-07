@@ -43,3 +43,16 @@ export function purchase(req, res) {
         res.status(error.response.status).send(error.response.data);
     });
 }
+
+export function walletContent(req, res) {
+    console.log("Get wallet request body: " + JSON.stringify(req.body));
+
+    axios.post('http://localhost:8080/wallet/content', req.body)
+    .then((response) => {
+        console.log("Wallet content exchange response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);   
+    });
+}
