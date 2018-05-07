@@ -9,6 +9,7 @@ export function login(request, response) {
         console.log("Login exchange response: " + JSON.stringify(exchangeResponse.data))
         response.json({ username: exchangeResponse.data.username, token: exchangeResponse.data.token})
     }).catch((error) => {
+        // TODO: handle case when service is down
         if (error.response.status === 403) response.json({error: "Unable to login with provided credentials"})
         else response.json({error: "Server error"})
     })
@@ -118,13 +119,15 @@ export function walletContent(req, res) {
     });
 }
 
+
+//TODO handle real responses after response will be sent from withdrawn/deposit in ex. serv.
 export function depositToWallet(req, res) {
     console.log("Deposit to wallet request body: " + JSON.stringify(req.body));
 
     axios.post('http://localhost:8080/wallet/deposit', req.body)
     .then((response) => {
         console.log("Deposit to wallet exchange response: " + JSON.stringify(response.data));
-        res.status(response.status).send(response.data);
+        res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   
@@ -137,7 +140,7 @@ export function withdrawnFromWallet(req, res) {
     axios.post('http://localhost:8080/wallet/withdrawn', req.body)
     .then((response) => {
         console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data));
-        res.status(response.status).send(response.data);
+        res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   
