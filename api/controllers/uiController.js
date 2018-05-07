@@ -23,6 +23,23 @@ export function register(req, res) {
         res.status(response.status).send(response.data);
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);   
+        res.status(error.response.status).send(error.response.data);
+    });
+}
+
+export function purchase(req, res) {
+    console.log("Purchase request body: " + JSON.stringify(req.params));
+
+    axios.get('http://localhost:8090/values/newestValue', {
+        params:{
+            date: req.param("date")
+        }
+    })
+    .then((response) => {
+        console.log("Purchase transaction response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);
     });
 }

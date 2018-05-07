@@ -4,5 +4,6 @@ module.exports = function(app) {
 
   app.route('/login').post(uiController.login);
   app.route('/register').post(uiController.register);
+  app.route('/purchase').post(uiController.purchase);
 
 };
