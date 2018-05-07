@@ -81,3 +81,29 @@ export function walletContent(req, res) {
         res.status(error.response.status).send(error.response.data);   
     });
 }
+
+export function depositToWallet(req, res) {
+    console.log("Deposit to wallet request body: " + JSON.stringify(req.body));
+
+    axios.post('http://localhost:8080/wallet/deposit', req.body)
+    .then((response) => {
+        console.log("Deposit to wallet exchange response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);   
+    });
+}
+
+export function withdrawnFromWallet(req, res) {
+    console.log("Withdrawn from request body: " + JSON.stringify(req.body));
+
+    axios.post('http://localhost:8080/wallet/withdrawn', req.body)
+    .then((response) => {
+        console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);   
+    });
+}

@@ -2,9 +2,15 @@
 module.exports = function(app) {
   var uiController = require('../controllers/uiController');
 
+  // USER ROUTES
   app.route('/login').post(uiController.login);
   app.route('/register').post(uiController.register);
+  
+  // TRANSACTION ROUTES
   app.route('/purchase').post(uiController.purchase);
-  app.route('/walletContent').post(uiController.walletContent);
 
+  // WALLET ROUTES
+  app.route('/walletContent').post(uiController.walletContent);
+  app.route('/depositToWallet').post(uiController.depositToWallet);
+  app.route('/withdrawnFromWallet').post(uiController.withdrawnFromWallet);
 };
