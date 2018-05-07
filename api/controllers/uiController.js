@@ -45,7 +45,6 @@ export function purchase(req, res) {
     .then((response) => {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
-        console.log("siemano" + newestVal.cents);
         let headers = {
             'Content-Type': 'application/json'
         };
@@ -73,7 +72,7 @@ export function sell(req, res) {
     let moneyAmount = req.body.moneyAmount;
     let username = req.body.username;
     let transactionTime = req.body.date;
-    console.log("Purchase request body: " + JSON.stringify(req.body));
+    console.log("Sale request body: " + JSON.stringify(req.body));
 
     axios.get('http://localhost:8090/values/newestValue', {
         params:{
@@ -81,9 +80,8 @@ export function sell(req, res) {
         }
     })
         .then((response) => {
-            console.log("Purchase transaction response: " + JSON.stringify(response.data));
+            console.log("Sale transaction response: " + JSON.stringify(response.data));
             let newestVal = JSON.parse(JSON.stringify(response.data));
-            console.log("siemano" + newestVal.cents);
             let headers = {
                 'Content-Type': 'application/json'
             };
