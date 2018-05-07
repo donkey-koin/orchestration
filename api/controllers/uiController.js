@@ -27,5 +27,36 @@ export function register(req, res) {
     .catch((error) => {
             if (error.response.status === 409) res.status(409).send({ error: error.response.data })
             else res.json({ error: "Server error" });
+        res.status(error.response.status).send(error.response.data);
+    });
+}
+
+export function purchase(req, res) {
+    console.log("Purchase request body: " + JSON.stringify(req.params));
+
+    axios.get('http://localhost:8090/values/newestValue', {
+        params:{
+            date: req.param("date")
+        }
+    })
+    .then((response) => {
+        console.log("Purchase transaction response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);
+    });
+}
+
+export function walletContent(req, res) {
+    console.log("Get wallet request body: " + JSON.stringify(req.body));
+
+    axios.post('http://localhost:8080/wallet/content', req.body)
+    .then((response) => {
+        console.log("Wallet content exchange response: " + JSON.stringify(response.data));
+        res.status(response.status).send(response.data);
+    })
+    .catch((error) => {
+        res.status(error.response.status).send(error.response.data);   
     });
 }
