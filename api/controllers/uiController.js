@@ -106,8 +106,7 @@ export function withdrawnFromWallet(req, res) {
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   
     });
-}       });
-}
+} 
 
 export function getLastValues(req, res) {
     console.log("Withdrawn from request body: " + JSON.stringify(req.body));
