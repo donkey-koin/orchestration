@@ -143,7 +143,7 @@ export function getLastValues(req, res) {
     let url = 'http://localhost:8090/values';
 
     var today = moment();
-    console.log(today.utc().format());
+    // console.log(today.utc().format());
 
     axios
         .get(url + "/search" , {
@@ -153,7 +153,7 @@ export function getLastValues(req, res) {
             }
         })
         .then(response => {
-            console.log(response.data);
+            // console.log(response.data);
             res.send(response.data);
         })
         .catch(error => {
