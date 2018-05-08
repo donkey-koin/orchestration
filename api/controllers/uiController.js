@@ -1,5 +1,6 @@
 'use strict';
 import axios from "axios";
+import moment from "moment";
 
 
 export function login(request, response) {
@@ -155,5 +156,8 @@ export function getLastValues(req, res) {
             console.log(response.data);
             res.send(response.data);
         })
+        .catch(error => {
+            res.json({error:"Error occured"});
+        });
 
 }
