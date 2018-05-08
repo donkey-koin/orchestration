@@ -9,6 +9,7 @@ export function login(request, response) {
         console.log("Login exchange response: " + JSON.stringify(exchangeResponse.data))
         response.json({ username: exchangeResponse.data.username, token: exchangeResponse.data.token})
     }).catch((error) => {
+        // TODO: handle case when service is down
         if (error.response.status === 403) response.json({error: "Unable to login with provided credentials"})
         else response.json({error: "Server error"})
     })
@@ -34,18 +35,12 @@ export function register(req, res) {
 export function purchase(req, res) {
     let moneyAmount = req.body.moneyAmount;
     let username = req.body.username;
-    let transactionTime = req.body.date;
     console.log("Purchase request body: " + JSON.stringify(req.body));
 
-    axios.get('http://localhost:8090/values/newestValue', {
-        params:{
-            date: req.body.date
-        }
-    })
+    axios.get('http://localhost:8090/values/newestValue')
     .then((response) => {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
-        console.log("siemano" + newestVal.cents);
         let headers = {
             'Content-Type': 'application/json'
         };
@@ -55,7 +50,7 @@ export function purchase(req, res) {
                     "username": username,
                     "moneyAmount": moneyAmount,
                     "lastKoinValue": newestVal.cents,
-                    "transactionTime": transactionTime
+                    "transactionTime": newestVal.date
                 }, headers)
             .then((response) => {
                 res.status(response.status).send(response.data);
@@ -67,6 +62,38 @@ export function purchase(req, res) {
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);
     });
+}
+
+export function sell(req, res) {
+    let moneyAmount = req.body.moneyAmount;
+    let username = req.body.username;
+    console.log("Sale request body: " + JSON.stringify(req.body));
+
+    axios.get('http://localhost:8090/values/newestValue')
+        .then((response) => {
+            console.log("Sale transaction response: " + JSON.stringify(response.data));
+            let newestVal = JSON.parse(JSON.stringify(response.data));
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+            axios
+                .post('http://localhost:8080/transaction/sell',
+                    {
+                        "username": username,
+                        "moneyAmount": moneyAmount,
+                        "lastKoinValue": newestVal.cents,
+                        "transactionTime": newestVal.date
+                    }, headers)
+                .then((response) => {
+                    res.status(response.status).send(response.data);
+                })
+                .catch((error) => {
+                    res.status(error.response.status).send(error.response.data);
+                });
+        })
+        .catch((error) => {
+            res.status(error.response.status).send(error.response.data);
+        });
 }
 
 export function walletContent(req, res) {
@@ -82,13 +109,15 @@ export function walletContent(req, res) {
     });
 }
 
+
+//TODO handle real responses after response will be sent from withdrawn/deposit in ex. serv.
 export function depositToWallet(req, res) {
     console.log("Deposit to wallet request body: " + JSON.stringify(req.body));
 
     axios.post('http://localhost:8080/wallet/deposit', req.body)
     .then((response) => {
         console.log("Deposit to wallet exchange response: " + JSON.stringify(response.data));
-        res.status(response.status).send(response.data);
+        res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   
@@ -101,7 +130,7 @@ export function withdrawnFromWallet(req, res) {
     axios.post('http://localhost:8080/wallet/withdrawn', req.body)
     .then((response) => {
         console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data));
-        res.status(response.status).send(response.data);
+        res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   

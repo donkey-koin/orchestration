@@ -9,6 +9,7 @@ module.exports = function(app) {
   
   // TRANSACTION ROUTES
   app.route('/purchase').post(uiController.purchase);
+  app.route('/sell').post(uiController.sell);
 
   // WALLET ROUTES
   app.route('/walletContent').post(uiController.walletContent);
