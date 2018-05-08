@@ -106,4 +106,26 @@ export function withdrawnFromWallet(req, res) {
     .catch((error) => {
         res.status(error.response.status).send(error.response.data);   
     });
+}       });
+}
+
+export function getLastValues(req, res) {
+    console.log("Withdrawn from request body: " + JSON.stringify(req.body));
+    let url = 'http://localhost:8090/values';
+
+    var today = moment();
+    console.log(today.utc().format());
+
+    axios
+        .get(url + "/search" , {
+            params: {
+                date: today.utc().format(),
+                last: 5
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+            res.send(response.data);
+        })
+
 }
