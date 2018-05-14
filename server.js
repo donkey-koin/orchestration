@@ -19,28 +19,4 @@ app.use((req, res, next) => {
 var routes = require('./api/routes/routes'); //importing route
 routes(app);
 
-// app.get('/api/values', (req, res) => {
-//     if (Number(req.query.last)) {
-
-//         var today = moment().set({ second: 0 });
-//         console.log(today.utc().format());
-
-//         axios
-//             .get(url + "/search?date=" + today.utc().format())
-//             .then(response => {
-//                 res.send(response.data);
-//             })
-//     } else {
-//         axios
-//             .get(url)
-//             .then(response => {
-//                 res.send(response.data);
-//             })
-//             .catch(error => {
-//                 console.log(error);
-//                 res.send({ express: 'Hallo' });
-//             });
-//     }
-// });
-
 app.listen(port, () => console.log(`Listening on port ${port}`));

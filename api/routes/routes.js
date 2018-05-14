@@ -5,7 +5,6 @@ module.exports = function(app) {
   // USER ROUTES
   app.route('/login').post(uiController.login);
   app.route('/register').post(uiController.register);
-  app.route('/last').get(uiController.getLastValues);
   
   // TRANSACTION ROUTES
   app.route('/purchase').post(uiController.purchase);
@@ -15,4 +14,9 @@ module.exports = function(app) {
   app.route('/walletContent').post(uiController.walletContent);
   app.route('/depositToWallet').post(uiController.depositToWallet);
   app.route('/withdrawnFromWallet').post(uiController.withdrawnFromWallet);
+
+  //CHARTS AND STATS ROUTES
+  app.route('/last').get(uiController.getLastValues);
+
+
 };
