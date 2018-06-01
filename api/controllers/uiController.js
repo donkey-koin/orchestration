@@ -139,17 +139,17 @@ export function withdrawnFromWallet(req, res) {
 } 
 
 export function getLastValues(req, res) {
-    console.log("Withdrawn from request body: " + JSON.stringify(req.body));
+    // console.log("Get last values request body: " + JSON.stringify(req.body));
     let url = 'http://localhost:8090/values';
 
     var today = moment();
-    // console.log(today.utc().format());
-
+    let amount = req.query.amount != undefined ? req.query.amount : 5;
+    // console.log(req.query.amount);
     axios
         .get(url + "/search" , {
             params: {
                 date: today.utc().format(),
-                last: 5
+                last: amount
             }
         })
         .then(response => {
