@@ -2,7 +2,7 @@
 import axios from "axios";
 import moment from "moment";
 
-
+// ================================================== USER ROUTES ==========================
 export function login(request, response) {
     console.log("Login request body: " + JSON.stringify(request.body))
     axios.post('http://localhost:8080/login', request.body)
@@ -27,12 +27,13 @@ export function register(req, res) {
             if (response.status == 201) res.json({ data: "Success" });
     })
     .catch((error) => {
-            if (error.response.status === 409) res.status(409).send({ error: error.response.data })
-            else res.json({ error: "Server error" });
+        if (error.response.status === 409) res.status(409).send({ error: error.response.data })
+        else res.json({ error: "Server error" });
         res.status(error.response.status).send(error.response.data);
     });
 }
 
+// ===================================== TRANSACTION ROUTES =================================
 export function purchase(req, res) {
     let moneyAmount = req.body.moneyAmount;
     let username = req.body.username;
@@ -42,9 +43,6 @@ export function purchase(req, res) {
     .then((response) => {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
-        let headers = {
-            'Content-Type': 'application/json'
-        };
         axios
             .post('http://localhost:8080/transaction/purchase',
                 {
@@ -52,7 +50,7 @@ export function purchase(req, res) {
                     "moneyAmount": moneyAmount,
                     "lastKoinValue": newestVal.cents,
                     "transactionTime": newestVal.date
-                }, headers)
+                }, createJsonHeaders(req.headers.authorization))
             .then((response) => {
                 res.status(response.status).send(response.data);
             })
@@ -74,9 +72,6 @@ export function sell(req, res) {
         .then((response) => {
             console.log("Sale transaction response: " + JSON.stringify(response.data));
             let newestVal = JSON.parse(JSON.stringify(response.data));
-            let headers = {
-                'Content-Type': 'application/json'
-            };
             axios
                 .post('http://localhost:8080/transaction/sell',
                     {
@@ -84,7 +79,7 @@ export function sell(req, res) {
                         "moneyAmount": moneyAmount,
                         "lastKoinValue": newestVal.cents,
                         "transactionTime": newestVal.date
-                    }, headers)
+                    }, createJsonHeaders(req.headers.authorization))
                 .then((response) => {
                     res.status(response.status).send(response.data);
                 })
@@ -97,10 +92,11 @@ export function sell(req, res) {
         });
 }
 
+// ======================================= WALLET ROUTES ==================================
 export function walletContent(req, res) {
     console.log("Get wallet request body: " + JSON.stringify(req.body));
 
-    axios.post('http://localhost:8080/wallet/content', req.body)
+    axios.post('http://localhost:8080/wallet/content', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Wallet content exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(response.data);
@@ -114,8 +110,7 @@ export function walletContent(req, res) {
 //TODO handle real responses after response will be sent from withdrawn/deposit in ex. serv.
 export function depositToWallet(req, res) {
     console.log("Deposit to wallet request body: " + JSON.stringify(req.body));
-
-    axios.post('http://localhost:8080/wallet/deposit', req.body)
+    axios.post('http://localhost:8080/wallet/deposit', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Deposit to wallet exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
@@ -128,7 +123,7 @@ export function depositToWallet(req, res) {
 export function withdrawnFromWallet(req, res) {
     console.log("Withdrawn from request body: " + JSON.stringify(req.body));
 
-    axios.post('http://localhost:8080/wallet/withdrawn', req.body)
+    axios.post('http://localhost:8080/wallet/withdrawn', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
@@ -140,6 +135,7 @@ export function withdrawnFromWallet(req, res) {
 
 export function getLastValues(req, res) {
     // console.log("Get last values request body: " + JSON.stringify(req.body));
+
     let url = 'http://localhost:8090/values';
 
     var today = moment();
@@ -160,4 +156,14 @@ export function getLastValues(req, res) {
             res.json({error:"Error occured"});
         });
 
+}
+
+
+function createJsonHeaders(token) { 
+    return {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        }
+    };
 }
