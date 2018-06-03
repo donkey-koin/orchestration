@@ -158,6 +158,20 @@ export function getLastValues(req, res) {
 
 }
 
+export function purchaseTrigger(req, res) {
+    console.log(req.body);
+
+    axios.post('http://localhost:8090/triggers', req.body, createJsonHeaders(req.headers.authorization))
+    .then((response) => {
+        console.log("Create trigger response: " + JSON.stringify(response.data));
+        res.status(response.status).send(JSON.stringify({"status" : "ok"}));
+    })
+    .catch((error) => {
+        res.send(error.response);
+    });
+
+}
+
 
 function createJsonHeaders(token) { 
     return {

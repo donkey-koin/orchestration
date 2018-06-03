@@ -18,5 +18,7 @@ module.exports = function(app) {
   //CHARTS AND STATS ROUTES
   app.route('/last').get(uiController.getLastValues);
 
+  //PURCHASE TRIGGERS
+  app.route('/purchase-trigger').post(uiController.purchaseTrigger);
 
 };
