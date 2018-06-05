@@ -5,7 +5,8 @@ module.exports = function(app) {
   // USER ROUTES
   app.route('/login').post(uiController.login);
   app.route('/register').post(uiController.register);
-  
+  app.route('/getUserData').get(uiController.getUserData);
+
   // TRANSACTION ROUTES
   app.route('/purchase').post(uiController.purchase);
   app.route('/sell').post(uiController.sell);

@@ -33,6 +33,16 @@ export function register(req, res) {
     });
 }
 
+export function getUserData(req, res) {
+    console.log("getting user data");
+
+    axios.get('http://localhost:8080/users?username=' + req.query.username, createJsonHeaders(req.headers.authorization))
+        .then((response) => {
+            console.log("gotten userdata");
+            res.json(response)
+        })
+}
+
 // ===================================== TRANSACTION ROUTES =================================
 export function purchase(req, res) {
     let moneyAmount = req.body.moneyAmount;
@@ -102,7 +112,7 @@ export function walletContent(req, res) {
         res.status(response.status).send(response.data);
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);   
+        res.status(error.response.status).send(error.response.data);
     });
 }
 
@@ -116,7 +126,7 @@ export function depositToWallet(req, res) {
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);   
+        res.status(error.response.status).send(error.response.data);
     });
 }
 
@@ -129,9 +139,9 @@ export function withdrawnFromWallet(req, res) {
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);   
+        res.status(error.response.status).send(error.response.data);
     });
-} 
+}
 
 export function getLastValues(req, res) {
     // console.log("Get last values request body: " + JSON.stringify(req.body));
@@ -173,7 +183,7 @@ export function purchaseTrigger(req, res) {
 }
 
 
-function createJsonHeaders(token) { 
+function createJsonHeaders(token) {
     return {
         headers: {
             'Content-Type': 'application/json',
