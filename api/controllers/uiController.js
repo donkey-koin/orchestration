@@ -168,6 +168,9 @@ export function getLastValues(req, res) {
 
 }
 
+
+// ======================================= PURCHASE TRIGGERS ROUTES ==================================
+
 export function purchaseTrigger(req, res) {
     console.log(req.body);
 
@@ -179,7 +182,19 @@ export function purchaseTrigger(req, res) {
     .catch((error) => {
         res.send(error.response);
     });
+}
 
+// ======================================= BITCOIN TRANSACTION ROUTES ==================================
+
+export function getTransactions(req, res) {
+    axios.get('http://localhost:8090/transaction')
+        .then((response) => {
+            res.send(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+            res.send(error);
+        });
 }
 
 
