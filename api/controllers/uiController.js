@@ -187,13 +187,36 @@ export function purchaseTrigger(req, res) {
 // ======================================= BITCOIN TRANSACTION ROUTES ==================================
 
 export function getTransactions(req, res) {
-    axios.get('http://localhost:8090/transaction')
+    if (req.query.username) {
+        let publicKey;
+        axios.get('http://localhost:8080/users', {headers: {Authorization: req.headers.authorization}})
+            .then((response) => {
+                publicKey =  response.data.publicKey;
+                fireTransaction(res, publicKey);
+            })
+            .catch((error) => {
+                console.log(error);
+                res.send(error);
+            });
+
+
+    } else {
+        fireTransaction(res, null);
+    }
+}
+
+function fireTransaction(res, publicKey){
+    let url = 'http://localhost:8090/transaction'
+    if(publicKey){
+        url += '/publicKey=' + publicKey;
+    }
+    axios.get(url)
         .then((response) => {
             res.send(response.data);
         })
         .catch((error) => {
             console.log(error);
-            res.send(error);
+        res.send(error.data);
         });
 }
 
