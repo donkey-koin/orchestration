@@ -54,7 +54,6 @@ export function purchase(req, res) {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
         newestVal.cents = Number(newestVal.cents)/100
-        console.log("new val " + newestVal.cents)
         axios.post('http://localhost:8080/transaction/purchase',
                 {
                     "username": username,
@@ -63,8 +62,8 @@ export function purchase(req, res) {
                     "transactionTime": newestVal.date
                 }, createJsonHeaders(req.headers.authorization))
             .then((response) => {
-                console.log(response)
-                axios.post('http://localhost:8090/transaction',response, createJsonHeaders(req.headers.authorization))
+                console.log("data "  + JSON.stringify(response.data))
+                axios.post('http://localhost:8090/transaction',response.data, createJsonHeaders(req.headers.authorization))
                 res.status(response.status).send(response.data);
             })
             .catch((error) => {
@@ -106,7 +105,6 @@ export function sell(req, res) {
 }
 
 export function init(req, res) { 
-    console.log(req)
     axios.post('http://localhost:8080/transaction/init',
         {
             "publicKey": req.body.publicKey,
