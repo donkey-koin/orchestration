@@ -224,7 +224,7 @@ export function getTransactions(req, res) {
 function fireTransaction(res, publicKey){
     let url = 'http://localhost:8090/transaction'
     if(publicKey){
-        url += '/publicKey=' + publicKey;
+        url += '/' + publicKey;
     }
     axios.get(url)
         .then((response) => {
