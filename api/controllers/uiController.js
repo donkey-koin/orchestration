@@ -205,10 +205,10 @@ export function purchaseTrigger(req, res) {
 export function getTransactions(req, res) {
     if (req.query.username) {
         let publicKey;
-        axios.get('http://localhost:8080/users', {headers: {Authorization: req.headers.authorization}})
+        axios.get('http://localhost:8080/users/user-public-key', {headers: {Authorization: req.headers.authorization}})
             .then((response) => {
                 publicKey =  response.data.publicKey;
-                fireTransaction(res, publicKey);
+                fireTransaction(res, publicKey, response.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -217,15 +217,24 @@ export function getTransactions(req, res) {
 
 
     } else {
-        fireTransaction(res, null);
+        getAll(res);
     }
 }
 
-function fireTransaction(res, publicKey){
+function fireTransaction(res, publicKey, dejta){
+    let url = 'http://localhost:8090/transaction/find'
+    axios.post(url, dejta)
+        .then((response) => {
+            res.send(response.data);
+        })
+        .catch((error) => {
+            console.log(error);
+        res.send(error.data);
+        });
+}
+
+function getAll(res){
     let url = 'http://localhost:8090/transaction'
-    if(publicKey){
-        url += '/' + publicKey;
-    }
     axios.get(url)
         .then((response) => {
             res.send(response.data);
