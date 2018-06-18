@@ -68,16 +68,19 @@ export function purchase(req, res) {
                         axios.post('http://localhost:8080/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
                     })
                     .catch((error) => {
-                        res.status(error.response.status).send(error.response.data);
+                        console.log(error.response.status)
+                        res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
                     });
                 res.status(response.status).send(response.data);
             })
             .catch((error) => {
-                res.status(error.response.status).send(error.response.data);
+                console.log(error.response.status)
+                res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
             });
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);
+        console.log(error.response.status)
+        res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
     });
 }
 
