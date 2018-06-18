@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   //PURCHASE TRIGGERS ROUTES
   app.route('/purchase-trigger').post(uiController.purchaseTrigger);
-
+  app.route('/my-triggers').get(uiController.getMyTriggers);
 
   //BITCOIN TRANSACTION ROUTES
   app.route('/blockchain').get(uiController.getTransactions);

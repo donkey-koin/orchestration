@@ -206,6 +206,22 @@ export function purchaseTrigger(req, res) {
     });
 }
 
+
+export function getMyTriggers(req, res) {
+    console.log(req.query.username);
+    let url = 'http://localhost:8090/triggers/' + req.query.username;
+    console.log(url);
+     axios.get(url, {headers: {Authorization: req.headers.authorization}})    
+     .then((response) => {
+         console.log("Get trigger response: " + JSON.stringify(response.data));
+         res.status(response.status).send(response.data);
+     })
+     .catch((error) => {
+         console.log(error);
+         res.send(error.response);
+     }); 
+ }
+
 // ======================================= BITCOIN TRANSACTION ROUTES ==================================
 
 export function getTransactions(req, res) {
