@@ -62,7 +62,14 @@ export function purchase(req, res) {
                     "transactionTime": newestVal.date
                 }, createJsonHeaders(req.headers.authorization))
             .then((response) => {
-                axios.post('http://localhost:8090/transaction',response.data, createJsonHeaders(req.headers.authorization))
+                axios
+                    .post('http://localhost:8090/transaction',response.data, createJsonHeaders(req.headers.authorization))
+                    .then((response) => {
+                        axios.post('http://localhost:8080/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
+                    })
+                    .catch((error) => {
+                        res.status(error.response.status).send(error.response.data);
+                    });
                 res.status(response.status).send(response.data);
             })
             .catch((error) => {
@@ -103,12 +110,12 @@ export function sell(req, res) {
         });
 }
 
-export function init(req, res) { 
+export function init(req, res) {
     axios.post('http://localhost:8080/transaction/init',
         {
             "publicKey": req.body.publicKey,
             "moneyAmount": req.body.moneyAmount
-        }    
+        }
     ).then((response) => {
         res.status(response.status).send(response.data);
     })
