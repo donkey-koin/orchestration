@@ -62,7 +62,6 @@ export function purchase(req, res) {
                     "transactionTime": newestVal.date
                 }, createJsonHeaders(req.headers.authorization))
             .then((response) => {
-                console.log("data "  + JSON.stringify(response.data))
                 axios.post('http://localhost:8090/transaction',response.data, createJsonHeaders(req.headers.authorization))
                 res.status(response.status).send(response.data);
             })
@@ -100,7 +99,7 @@ export function sell(req, res) {
                 });
         })
         .catch((error) => {
-            res.status(error.response.status).send(error.response.data);
+            res.status(500).send(error.response.data);
         });
 }
 
@@ -142,7 +141,7 @@ export function depositToWallet(req, res) {
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);
+        res.status(500).send(error.response.data);
     });
 }
 
