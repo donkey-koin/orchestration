@@ -148,7 +148,7 @@ export function depositToWallet(req, res) {
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.status(500).send(error.response.data);
+        res.status(500).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
     });
 }
 
@@ -157,11 +157,11 @@ export function withdrawnFromWallet(req, res) {
 
     axios.post('http://localhost:8080/wallet/withdrawn', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
-        console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data));
+        console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data) + " status " + response.status);
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.status(error.response.status).send(error.response.data);
+        res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
     });
 }
 
