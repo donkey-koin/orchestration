@@ -214,7 +214,7 @@ export function purchaseTrigger(req, res) {
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
     })
     .catch((error) => {
-        res.send(error.response);
+        res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
     });
 }
 
