@@ -102,14 +102,23 @@ export function sell(req, res) {
                         "transactionTime": newestVal.date
                     }, createJsonHeaders(req.headers.authorization))
                 .then((response) => {
+                    axios
+                        .post('http://localhost:8090/transaction/sell',response.data, createJsonHeaders(req.headers.authorization))
+                        .then((response) => {
+                            axios.post('http://localhost:8080/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
+                        })
+                        .catch((error) => {
+                            console.log(error.response.status)
+                            res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
+                        });
                     res.status(response.status).send(response.data);
                 })
                 .catch((error) => {
-                    res.status(error.response.status).send(error.response.data);
+                    res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
                 });
         })
         .catch((error) => {
-            res.status(500).send(error.response.data);
+            res.status(error.response.status).send(JSON.stringify({"error" : error.response.data, "status": error.response.status}));
         });
 }
 
