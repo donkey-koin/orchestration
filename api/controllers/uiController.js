@@ -2,10 +2,13 @@
 import axios from "axios";
 import moment from "moment";
 
+const TRANSACTION_HOST = "transaction-service-svc.donkey-koin.svc:8080";
+const EXCHANGE_HOST = "exchange-service-svc.donkey-koin.svc:8080"
+
 // ================================================== USER ROUTES ==========================
 export function login(request, response) {
     console.log("Login request body: " + JSON.stringify(request.body))
-    axios.post('http://localhost:8080/login', request.body)
+    axios.post(EXCHANGE_HOST + '/login', request.body)
     .then((exchangeResponse) => {
         console.log("Login exchange response: " + JSON.stringify(exchangeResponse.data))
         response.json({ username: exchangeResponse.data.username, token: exchangeResponse.data.token})
@@ -19,7 +22,7 @@ export function login(request, response) {
 export function register(req, res) {
     console.log("Registration request body: " + req);
 
-    axios.post('http://localhost:8080/users', req.body)
+    axios.post(EXCHANGE_HOST + '/users', req.body)
     .then((response) => {
             // console.log(response);
             console.log(response.status);
@@ -36,7 +39,7 @@ export function register(req, res) {
 export function getUserData(req, res) {
     console.log("getting user data");
 
-    axios.get('http://localhost:8080/users?username=' + req.query.username, createJsonHeaders(req.headers.authorization))
+    axios.get(EXCHANGE_HOST + '/users?username=' + req.query.username, createJsonHeaders(req.headers.authorization))
         .then((response) => {
             console.log("gotten userdata");
             res.json(response)
@@ -49,12 +52,12 @@ export function purchase(req, res) {
     let username = req.body.username;
     console.log("Purchase request body: " + JSON.stringify(req.body));
 
-    axios.get('http://localhost:8090/values/newestValue')
+    axios.get(TRANSACTION_HOST + '/values/newestValue')
     .then((response) => {
         console.log("Purchase transaction response: " + JSON.stringify(response.data));
         let newestVal = JSON.parse(JSON.stringify(response.data));
         newestVal.cents = Number(newestVal.cents)/100
-        axios.post('http://localhost:8080/transaction/purchase',
+        axios.post(EXCHANGE_HOST + '/transaction/purchase',
                 {
                     "username": username,
                     "moneyAmount": moneyAmount,
@@ -63,9 +66,9 @@ export function purchase(req, res) {
                 }, createJsonHeaders(req.headers.authorization))
             .then((response) => {
                 axios
-                    .post('http://localhost:8090/transaction',response.data, createJsonHeaders(req.headers.authorization))
+                    .post(TRANSACTION_HOST + '/transaction',response.data, createJsonHeaders(req.headers.authorization))
                     .then((response) => {
-                        axios.post('http://localhost:8080/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
+                        axios.post(EXCHANGE_HOST + '/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
                     })
                     .catch((error) => {
                         console.log(error.response.status)
@@ -89,12 +92,12 @@ export function sell(req, res) {
     let username = req.body.username;
     console.log("Sale request body: " + JSON.stringify(req.body));
 
-    axios.get('http://localhost:8090/values/newestValue')
+    axios.get(TRANSACTION_HOST + '/values/newestValue')
         .then((response) => {
             console.log("Sale transaction response: " + JSON.stringify(response.data));
             let newestVal = JSON.parse(JSON.stringify(response.data));
             axios
-                .post('http://localhost:8080/transaction/sell',
+                .post(EXCHANGE_HOST + '/transaction/sell',
                     {
                         "username": username,
                         "moneyAmount": moneyAmount,
@@ -103,9 +106,9 @@ export function sell(req, res) {
                     }, createJsonHeaders(req.headers.authorization))
                 .then((response) => {
                     axios
-                        .post('http://localhost:8090/transaction/sell',response.data, createJsonHeaders(req.headers.authorization))
+                        .post(TRANSACTION_HOST + '/transaction/sell',response.data, createJsonHeaders(req.headers.authorization))
                         .then((response) => {
-                            axios.post('http://localhost:8080/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
+                            axios.post(EXCHANGE_HOST + '/wallet/update', response.data, createJsonHeaders(req.headers.authorization))
                         })
                         .catch((error) => {
                             console.log(error.response.status)
@@ -123,7 +126,7 @@ export function sell(req, res) {
 }
 
 export function init(req, res) {
-    axios.post('http://localhost:8080/transaction/init',
+    axios.post(EXCHANGE_HOST + '/transaction/init',
         {
             "publicKey": req.body.publicKey,
             "moneyAmount": req.body.moneyAmount
@@ -140,7 +143,7 @@ export function init(req, res) {
 export function walletContent(req, res) {
     console.log("Get wallet request body: " + JSON.stringify(req.body));
 
-    axios.post('http://localhost:8080/wallet/content', req.body, createJsonHeaders(req.headers.authorization))
+    axios.post(EXCHANGE_HOST + '/wallet/content', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Wallet content exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(response.data);
@@ -154,7 +157,7 @@ export function walletContent(req, res) {
 //TODO handle real responses after response will be sent from withdrawn/deposit in ex. serv.
 export function depositToWallet(req, res) {
     console.log("Deposit to wallet request body: " + JSON.stringify(req.body));
-    axios.post('http://localhost:8080/wallet/deposit', req.body, createJsonHeaders(req.headers.authorization))
+    axios.post(EXCHANGE_HOST + '/wallet/deposit', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Deposit to wallet exchange response: " + JSON.stringify(response.data));
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
@@ -167,7 +170,7 @@ export function depositToWallet(req, res) {
 export function withdrawnFromWallet(req, res) {
     console.log("Withdrawn from request body: " + JSON.stringify(req.body));
 
-    axios.post('http://localhost:8080/wallet/withdrawn', req.body, createJsonHeaders(req.headers.authorization))
+    axios.post(EXCHANGE_HOST + '/wallet/withdrawn', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Withdrawn from wallet exchange response: " + JSON.stringify(response.data) + " status " + response.status);
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
@@ -180,7 +183,7 @@ export function withdrawnFromWallet(req, res) {
 export function getLastValues(req, res) {
     // console.log("Get last values request body: " + JSON.stringify(req.body));
 
-    let url = 'http://localhost:8090/values';
+    let url = TRANSACTION_HOST + '/values';
 
     var today = moment();
     let amount = req.query.amount != undefined ? req.query.amount : 5;
@@ -208,7 +211,7 @@ export function getLastValues(req, res) {
 export function purchaseTrigger(req, res) {
     console.log(req.body);
 
-    axios.post('http://localhost:8090/triggers', req.body, createJsonHeaders(req.headers.authorization))
+    axios.post(TRANSACTION_HOST + '/triggers', req.body, createJsonHeaders(req.headers.authorization))
     .then((response) => {
         console.log("Create trigger response: " + JSON.stringify(response.data));
         res.status(response.status).send(JSON.stringify({"status" : "ok"}));
@@ -221,7 +224,7 @@ export function purchaseTrigger(req, res) {
 
 export function getMyTriggers(req, res) {
     console.log(req.query.username);
-    let url = 'http://localhost:8090/triggers/' + req.query.username;
+    let url = TRANSACTION_HOST + '/triggers/' + req.query.username;
     console.log(url);
      axios.get(url, {headers: {Authorization: req.headers.authorization}})    
      .then((response) => {
@@ -239,7 +242,7 @@ export function getMyTriggers(req, res) {
 export function getTransactions(req, res) {
     if (req.query.username) {
         let publicKey;
-        axios.get('http://localhost:8080/users/user-public-key', {headers: {Authorization: req.headers.authorization}})
+        axios.get(EXCHANGE_HOST + '/users/user-public-key', {headers: {Authorization: req.headers.authorization}})
             .then((response) => {
                 publicKey =  response.data.publicKey;
                 fireTransaction(res, publicKey, response.data);
@@ -256,7 +259,7 @@ export function getTransactions(req, res) {
 }
 
 function fireTransaction(res, publicKey, dejta){
-    let url = 'http://localhost:8090/transaction/find'
+    let url = TRANSACTION_HOST + '/transaction/find'
     axios.post(url, dejta)
         .then((response) => {
             res.send(response.data);
@@ -268,7 +271,7 @@ function fireTransaction(res, publicKey, dejta){
 }
 
 function getAll(res){
-    let url = 'http://localhost:8090/transaction'
+    let url = TRANSACTION_HOST + '/transaction'
     axios.get(url)
         .then((response) => {
             res.send(response.data);
