@@ -2,8 +2,8 @@
 import axios from "axios";
 import moment from "moment";
 
-const TRANSACTION_HOST = "transaction-service-svc.donkey-koin.svc:8080";
-const EXCHANGE_HOST = "exchange-service-svc.donkey-koin.svc:8080"
+const TRANSACTION_HOST = process.env.TRANSACTION_HOST;
+const EXCHANGE_HOST = process.env.EXCHANGE_HOST;
 
 // ================================================== USER ROUTES ==========================
 export function login(request, response) {
