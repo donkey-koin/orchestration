@@ -4,8 +4,7 @@ import moment from "moment";
 
 const app = express();
 const port = process.env.PORT || 5000;
-const url =
-    "http://localhost:8080/values";
+const url = "http://exchange-service-svc.donkey-koin.svc:8080/values";
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
