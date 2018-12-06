@@ -38,11 +38,14 @@ export function register(req, res) {
 
 export function getUserData(req, res) {
     console.log("getting user data");
-
+    console.log(EXCHANGE_HOST + '/users?username=' + req.query.username)
     axios.get(EXCHANGE_HOST + '/users?username=' + req.query.username, createJsonHeaders())
         .then((response) => {
             console.log("gotten userdata");
             res.json(response)
+        }).catch(error => {
+            console.log(error.data)
+            res.json(error.data)
         })
 }
 

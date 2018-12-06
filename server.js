@@ -9,11 +9,6 @@ const url = "http://exchange-service-svc.donkey-koin.svc:8080/values";
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
-    next();
-});
 
 var routes = require('./api/routes/routes'); //importing route
 routes(app);
