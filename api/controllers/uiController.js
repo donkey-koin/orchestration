@@ -44,7 +44,7 @@ export function getUserData(req, res) {
             console.log("gotten userdata");
             res.json(response)
         }).catch(error => {
-            console.log(error.data)
+            console.log(error.status)
             res.json(error.data)
         })
 }
@@ -289,7 +289,8 @@ function getAll(res){
 function createJsonHeaders() {
     return {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authentication' : 'Bearer token'
         }
     };
 }
